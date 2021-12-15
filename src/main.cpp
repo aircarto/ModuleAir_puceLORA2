@@ -1,4 +1,4 @@
-// Code pour WEMOS d1 mini avec Custum Lora Shield
+// Code pour WEMOS d1 mini avec Custom Lora Shield
 
 #include <Arduino.h>
 
@@ -18,7 +18,7 @@ void os_getDevEui(u1_t *buf) { memcpy_P(buf, DEVEUI, 8); }
 static const u1_t PROGMEM APPKEY[16] = {0x6F, 0xD8, 0x5A, 0x71, 0xEB, 0xF0, 0xBE, 0xBB, 0xCF, 0xA5, 0x2C, 0x52, 0xE0, 0xD2, 0x05, 0x79};
 void os_getDevKey(u1_t *buf) { memcpy_P(buf, APPKEY, 16); }
 
-static uint8_t mydata[] = "io4";
+static uint8_t mydata[] = "io66";
 static osjob_t sendjob;
 
 // Schedule TX every this many seconds (might become longer due to duty
@@ -44,7 +44,7 @@ void do_send(osjob_t *j)
   {
     // Prepare upstream data transmission at the next possible time.
     LMIC_setTxData2(1, mydata, sizeof(mydata) - 1, 0);
-    Serial.println(F("Packet queued"));
+    Serial.println(F("Packet sending"));
   }
   // Next TX is scheduled after TX_COMPLETE event.
 }
@@ -79,7 +79,7 @@ void onEvent(ev_t ev)
     Serial.println(F("EV_JOINING"));
     break;
   case EV_JOINED:
-    Serial.println(F("EV_JOINED"));
+    Serial.println(F("Connecté au réseau: "));
     {
       u4_t netid = 0;
       devaddr_t devaddr = 0;
@@ -127,7 +127,7 @@ void onEvent(ev_t ev)
     Serial.println(F("EV_REJOIN_FAILED"));
     break;
   case EV_TXCOMPLETE:
-    Serial.println(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
+    Serial.println(F("Send_data_complete"));
     if (LMIC.txrxFlags & TXRX_ACK)
       Serial.println(F("Received ack"));
     if (LMIC.dataLen)
@@ -164,7 +164,7 @@ void onEvent(ev_t ev)
   ||    break;
   */
   case EV_TXSTART:
-    Serial.println(F("EV_TXSTART"));
+    Serial.println(F("Send_data_start"));
     break;
   case EV_TXCANCELED:
     Serial.println(F("EV_TXCANCELED"));
